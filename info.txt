@@ -1,5 +1,5 @@
 Arch: x64 
  Platform: Windows_NT 
  Number of CPUs: 20 
- Free Memory: 6.27 GB 
+ Free Memory: 6.44 GB 
  Total Memory: 15.63 GB 
