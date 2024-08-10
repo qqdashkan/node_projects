@@ -10,7 +10,7 @@ const usersRouter = require('./routes/users');
 const cartRouter = require('./routes/cart');
 
 const firstHandler = (req, res) => {
-  res.send('Hello customer');
+  res.send('Hello customer').status(200);
 };
 
 app.get('/', firstHandler);

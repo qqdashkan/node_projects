@@ -14,19 +14,12 @@ function renderCart(id) {
   }
 }
 
-function setCartToStorage(id, cart) {
-  let cartFromStorage = carts.find((item) => item.userId === id);
-  cartFromStorage = cart;
-}
-
 function addProductToCart(id, product) {
   const thisProduct = products.find((item) => item.id === +product);
   const thisCart = carts.find((item) => item.userId === id);
   const arrOfProducts = thisCart.products;
   arrOfProducts.push(thisProduct);
   thisCart.products = arrOfProducts;
-
-  setCartToStorage(id, thisCart);
 }
 
 const updateCart = (req, res) => {
@@ -34,27 +27,23 @@ const updateCart = (req, res) => {
   const { productId } = req.params;
   renderCart(headerUserId);
   addProductToCart(headerUserId, productId);
-  res.send(carts);
+  res.status(200).send(carts);
 };
 
 const deleteProductFromCart = (req, res) => {
   const headerUserId = req.headers['x-user-id'];
   const { productId } = req.params;
-  const { products } = carts.find((item) => item.userId === headerUserId);
-
   const thisCart = carts.find((item) => item.userId === headerUserId);
-  thisCart.products = products.filter((item) => item.id !== +productId);
+  const arrOfItems = thisCart.products;
+  thisCart.products = arrOfItems.filter((item) => item.id !== +productId);
 
-  setCartToStorage(headerUserId, thisCart);
-  res.send(carts);
+  res.status(200).send(carts);
 };
 
 const renderOrder = (req, res) => {
   const headerUserId = req.headers['x-user-id'];
   const { products: list } = carts.find((item) => item.userId === headerUserId);
-
-  const listOfProducts = list.map((item) => Number(item.price));
-  let totalPrice = listOfProducts.reduce((sum, current) => sum + current);
+  const totalPrice = list.reduce((sum, product) => sum + product.price, 0);
 
   const newOrder = {
     id: crypto.randomUUID(),
@@ -64,7 +53,7 @@ const renderOrder = (req, res) => {
   };
 
   orders.push(newOrder);
-  res.send(orders);
+  res.status(200).send(orders);
 };
 
 module.exports = {

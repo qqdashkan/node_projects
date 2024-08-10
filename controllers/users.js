@@ -9,7 +9,7 @@ const addNewUser = (req, res) => {
     email,
   };
   users.push(newUser);
-  res.json(newUser);
+  res.status(201).json(newUser);
 };
 
 module.exports = addNewUser;
