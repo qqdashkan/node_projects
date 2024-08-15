@@ -12,7 +12,6 @@ const errorHandler = require('./middlewares/errorHandler');
 const productsRouter = require('./routes/products');
 const usersRouter = require('./routes/users');
 const cartRouter = require('./routes/cart');
-const finderRouter = require('./routes/findUser');
 
 const firstHandler = (req, res) => {
   res.send('Hello customer').status(200);
@@ -22,7 +21,7 @@ app.get('/', firstHandler);
 app.use('/products', productsRouter);
 app.use('/register', usersRouter);
 app.use('/cart', cartRouter);
-app.use('/check', finderRouter);
+app.use('/check', usersRouter);
 
 app.use(errorHandler);
 

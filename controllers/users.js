@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { users } = require('../storage');
-const { Unprocessable } = require('../errorList');
+const { Unprocessable, Unauthorized } = require('../errorList');
 
 const addNewUser = (req, res) => {
   const { email, password } = req.body;
@@ -21,6 +21,13 @@ const addNewUser = (req, res) => {
   res.status(201).json(newUser);
 };
 
+const findUser = (req, res) => {
+  const headerUserId = req.headers['x-user-id'];
+  if (users.find((item) => item.id !== headerUserId)) {
+    throw new Unauthorized();
+  } else res.status(200).send('User required');
+};
+
 function validateEmail(email) {
   const emailValid = /^[a-zA-Z0-9._-]{1,254}@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/;
   return emailValid.test(email);
@@ -32,4 +39,7 @@ function validatePassword(password) {
   return passwordValid.test(password);
 }
 
-module.exports = addNewUser;
+module.exports = {
+  addNewUser,
+  findUser,
+};
