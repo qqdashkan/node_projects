@@ -1,4 +1,5 @@
 const { products } = require('../storage');
+const { NotFoundError } = require('../errorList');
 
 const getProductsList = (req, res) => {
   const items = products.map((item) => item.title);
@@ -10,7 +11,7 @@ const getProductByID = (req, res) => {
   const item = products.find((item) => item.id === reqID);
 
   if (!item) {
-    res.status(404).json({ err: 'Item not found' });
+    throw new NotFoundError();
   } else res.status(200).send(item);
 };
 

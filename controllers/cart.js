@@ -27,6 +27,7 @@ const updateCart = (req, res) => {
   const { productId } = req.params;
   renderCart(headerUserId);
   addProductToCart(headerUserId, productId);
+
   res.status(200).send(carts);
 };
 
