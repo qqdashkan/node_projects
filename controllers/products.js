@@ -11,7 +11,7 @@ const getProductByID = (req, res) => {
   const item = products.find((item) => item.id === reqID);
 
   if (!item) {
-    throw new NotFoundError();
+    throw new NotFoundError(`Product ${reqID} not found`);
   } else res.status(200).send(item);
 };
 

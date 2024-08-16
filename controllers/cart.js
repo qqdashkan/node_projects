@@ -1,10 +1,8 @@
 const { products, carts, orders } = require('../storage');
 const crypto = require('crypto');
 
-function renderCart(id) {
-  if (carts.find((item) => item.userId === id)) {
-    return;
-  } else {
+function createCart(id) {
+  if (!carts.find((item) => item.userId === id)) {
     const cart = {
       id: crypto.randomUUID(),
       userId: id,
@@ -17,15 +15,13 @@ function renderCart(id) {
 function addProductToCart(id, product) {
   const thisProduct = products.find((item) => item.id === +product);
   const thisCart = carts.find((item) => item.userId === id);
-  const arrOfProducts = thisCart.products;
-  arrOfProducts.push(thisProduct);
-  thisCart.products = arrOfProducts;
+  thisCart.products.push(thisProduct);
 }
 
 const updateCart = (req, res) => {
   const headerUserId = req.headers['x-user-id'];
   const { productId } = req.params;
-  renderCart(headerUserId);
+  createCart(headerUserId);
   addProductToCart(headerUserId, productId);
 
   res.status(200).send(carts);
@@ -35,8 +31,7 @@ const deleteProductFromCart = (req, res) => {
   const headerUserId = req.headers['x-user-id'];
   const { productId } = req.params;
   const thisCart = carts.find((item) => item.userId === headerUserId);
-  const arrOfItems = thisCart.products;
-  thisCart.products = arrOfItems.filter((item) => item.id !== +productId);
+  thisCart.products.filter((item) => item.id !== +productId);
 
   res.status(200).send(carts);
 };
