@@ -122,7 +122,6 @@ const addImageItem = (req, res) => {
   const id = crypto.randomUUID();
   const { productId } = req.params;
   eventEmitter.emit('fileUploadStart');
-  console.log(req.body);
 
   fs.readFile('products.store.json', function (err, data) {
     if (err) {
