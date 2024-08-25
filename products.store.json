@@ -1,0 +1,14 @@
+[
+  {
+    "id": "4b7536d8-8731-4a32-bec3-0bbfd23a88b8",
+    "name": "Lesson",
+    "description": "90 min",
+    "price": 30
+  },
+  {
+    "id": "3aadbe43-bce9-4bea-bfdf-9a5fd76279fd",
+    "name": "Excursion",
+    "description": "1 day trip around Paris",
+    "price": 95
+  }
+]

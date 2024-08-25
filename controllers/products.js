@@ -7,11 +7,11 @@ const getProductsList = (req, res) => {
 };
 
 const getProductByID = (req, res) => {
-  const reqID = Number(req.params.productId);
-  const item = products.find((item) => item.id === reqID);
+  const { productId } = req.params;
+  const item = products.find((item) => item.id === productId);
 
   if (!item) {
-    throw new NotFoundError(`Product ${reqID} not found`);
+    throw new NotFoundError(`Product ${productId} not found`);
   } else res.status(200).send(item);
 };
 
