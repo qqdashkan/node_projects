@@ -21,7 +21,6 @@ eventEmitter.on('fileUploadFailed', () => {
 
     if (data) {
       array = JSON.parse(data);
-      console.log(array);
     }
     array.push(text);
     const jsonText = JSON.stringify(array, null, 2);
@@ -47,7 +46,6 @@ eventEmitter.on('fileUploadStart', () => {
 
     if (data) {
       array = JSON.parse(data);
-      console.log(array);
     }
     array.push(text);
     const jsonText = JSON.stringify(array, null, 2);
@@ -73,7 +71,6 @@ eventEmitter.on('fileUploadEnd', (fileName) => {
 
     if (data) {
       array = JSON.parse(data);
-      console.log(array);
     }
     array.push(text);
     const jsonText = JSON.stringify(array, null, 2);
@@ -125,6 +122,7 @@ const addImageItem = (req, res) => {
   const id = crypto.randomUUID();
   const { productId } = req.params;
   eventEmitter.emit('fileUploadStart');
+  console.log(req.body);
 
   fs.readFile('products.store.json', function (err, data) {
     if (err) {
