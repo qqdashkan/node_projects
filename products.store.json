@@ -10,5 +10,17 @@
     "name": "Excursion",
     "description": "1 day trip around Paris",
     "price": 95
+  },
+  {
+    "id": "72126182-e5f9-4f12-a2c2-242f3974da7b",
+    "name": "Massage treatment",
+    "description": "60 min massage full body",
+    "price": 50
+  },
+  {
+    "id": "06b42edb-9592-4b5f-83ae-b217e2412c52",
+    "name": "Makeup",
+    "description": "full face makeup any type",
+    "price": 55
   }
 ]
