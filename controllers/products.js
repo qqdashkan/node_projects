@@ -1,18 +1,22 @@
-const { products } = require('../storage');
 const { NotFoundError } = require('../errorList');
+const {
+  renderProductsList,
+  findProductByID,
+} = require('../repository/products.repository');
 
 const getProductsList = (req, res) => {
-  const items = products.map((item) => item.title);
-  res.status(200).send(items);
+  const list = renderProductsList();
+  res.status(200).send(list);
 };
 
 const getProductByID = (req, res) => {
   const { productId } = req.params;
-  const item = products.find((item) => item.id === productId);
+  const item = findProductByID(productId);
 
   if (!item) {
     throw new NotFoundError(`Product ${productId} not found`);
-  } else res.status(200).send(item);
+  }
+  res.status(200).send(item);
 };
 
 module.exports = {

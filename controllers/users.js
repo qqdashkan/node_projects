@@ -1,36 +1,30 @@
-const crypto = require('crypto');
-const { users } = require('../storage');
-const { Unprocessable } = require('../errorList');
+const Joi = require('joi');
+const { createNewUser } = require('../services/user.service');
+const { ValidationError } = require('../errorList');
+
+const signUpBodyRules = Joi.object({
+  email: Joi.string()
+    .max(254)
+    .pattern(new RegExp('^[a-zA-Z0-9._-]{1,254}@[a-zA-Z0-9._-]+.[a-zA-Z]{2,}$'))
+    .required(),
+  password: Joi.string()
+    .min(8)
+    .pattern(
+      new RegExp(
+        '^(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$'
+      )
+    )
+    .required(),
+});
 
 const addNewUser = (req, res) => {
-  const { email, password } = req.body;
-
-  if (!validateEmail(email)) {
-    throw new Unprocessable('Provide valid email');
+  const { error } = signUpBodyRules.validate(req.body);
+  if (error) {
+    throw new ValidationError(error.message);
   }
-
-  if (!validatePassword(password)) {
-    throw new Unprocessable('Provide valid password');
-  }
-
-  const newUser = {
-    id: crypto.randomUUID(),
-    email,
-  };
-  users.push(newUser);
-  res.status(201).json(newUser);
+  const newUser = createNewUser(req.body);
+  res.status(201).send(newUser);
 };
-
-function validateEmail(email) {
-  const emailValid = /^[a-zA-Z0-9._-]{1,254}@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$/;
-  return emailValid.test(email);
-}
-
-function validatePassword(password) {
-  const passwordValid =
-    /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-  return passwordValid.test(password);
-}
 
 module.exports = {
   addNewUser,

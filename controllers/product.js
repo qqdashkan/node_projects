@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const { EventEmitter } = require('events');
-const { setImagesList, setVideosList } = require('../services/services');
+const { setImagesList, setVideosList } = require('../services/media.service');
 
 const eventEmitter = new EventEmitter();
 const productsList = 'products.store.json';
