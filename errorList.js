@@ -37,9 +37,27 @@ class Unprocessable extends BaseError {
   }
 }
 
+class BadRequest extends BaseError {
+  constructor(message) {
+    super();
+    this.status = 400;
+    this.message = message;
+  }
+}
+
+class UnsupportedMediaType extends BaseError {
+  constructor(message) {
+    super();
+    this.status = 415;
+    this.message = message;
+  }
+}
+
 module.exports = {
-  ValidationError,
+  BadRequest,
   Unauthorized,
   Unprocessable,
   NotFoundError,
+  ValidationError,
+  UnsupportedMediaType,
 };

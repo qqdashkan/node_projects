@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const { EventEmitter } = require('events');
+const { BadRequest } = require('../errorList');
 const { setImagesList, setVideosList } = require('../services/media.service');
 
 const eventEmitter = new EventEmitter();
@@ -18,7 +19,7 @@ eventEmitter.on('fileUploadFailed', () => {
     if (err) {
       console.error(err);
     }
-    console.log(text);
+    throw new BadRequest(err.message);
   });
 });
 
@@ -56,6 +57,8 @@ const createNewProductsList = (req, res) => {
     price,
   };
 
+  eventEmitter.emit('fileUploadStart');
+
   fs.readFile(productsList, function (err, data) {
     if (err) {
       console.error(err);
@@ -72,9 +75,10 @@ const createNewProductsList = (req, res) => {
 
     fs.writeFile(productsList, jsonData, (err) => {
       if (err) {
-        console.error(err);
+        eventEmitter.emit('fileUploadFailed', newItem.name);
       }
-      res.status(200).send('OK');
+      eventEmitter.emit('fileUploadEnd', newItem.name);
+      res.status(200).send('New product has been added');
     });
   });
 };
@@ -84,7 +88,7 @@ const addImageItem = (req, res) => {
   const { productId } = req.params;
   eventEmitter.emit('fileUploadStart');
 
-  fs.readFile(productsList, function (err, data) {
+  fs.readFile(productsList, async function (err, data) {
     if (err) {
       console.error(err);
     }
@@ -94,16 +98,29 @@ const addImageItem = (req, res) => {
       const filePath = path.join(__dirname, '..', 'media', fileName);
       const streamWrite = fs.createWriteStream(filePath);
       req.pipe(streamWrite);
-      0;
-      streamWrite.on('finish', () => {
-        eventEmitter.emit('fileUploadEnd', fileName);
-      });
 
-      streamWrite.on('error', () => {
+      const writeFilePromise = () => {
+        return new Promise((resolve, reject) => {
+          streamWrite.on('finish', () => {
+            setVideosList(productId, fileName);
+            resolve();
+          });
+
+          streamWrite.on('error', (err) => {
+            console.error(err.message);
+            reject();
+          });
+        });
+      };
+
+      try {
+        await writeFilePromise();
+        eventEmitter.emit('fileUploadEnd', fileName);
+        res.status(200).send('New image has been added');
+      } catch (err) {
         eventEmitter.emit('fileUploadFailed', fileName);
-        res.status(200).send('OK');
-      });
-      setImagesList(productId, fileName);
+        res.status(err.status).send(err.message);
+      }
     }
   });
 };
@@ -113,7 +130,7 @@ const addVideoItem = (req, res) => {
   const { productId } = req.params;
   eventEmitter.emit('fileUploadStart');
 
-  fs.readFile(productsList, function (err, data) {
+  fs.readFile(productsList, async function (err, data) {
     if (err) {
       console.error(err);
     }
@@ -124,15 +141,28 @@ const addVideoItem = (req, res) => {
       const streamWrite = fs.createWriteStream(filePath);
       req.pipe(streamWrite);
 
-      streamWrite.on('finish', () => {
-        eventEmitter.emit('fileUploadEnd', fileName);
+      const writeFilePromise = () => {
+        return new Promise((resolve, reject) => {
+          streamWrite.on('finish', () => {
+            setVideosList(productId, fileName);
+            resolve();
+          });
 
-        streamWrite.on('error', () => {
-          eventEmitter.emit('fileUploadFailed', fileName);
-          res.status(200).send('OK');
+          streamWrite.on('error', (err) => {
+            console.error(err.message);
+            reject();
+          });
         });
-      });
-      setVideosList(productId, fileName);
+      };
+
+      try {
+        await writeFilePromise();
+        eventEmitter.emit('fileUploadEnd', fileName);
+        res.status(200).send('New video has been added');
+      } catch (err) {
+        eventEmitter.emit('fileUploadFailed', fileName);
+        res.status(err.status).send(err.message);
+      }
     }
   });
 };

@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const { createNewUser } = require('../services/user.service');
+const { createNewUser, findUserByData } = require('../services/user.service');
 const { ValidationError } = require('../errorList');
 
 const signUpBodyRules = Joi.object({
@@ -17,15 +17,29 @@ const signUpBodyRules = Joi.object({
     .required(),
 });
 
-const addNewUser = (req, res) => {
+const addNewUser = async (req, res) => {
   const { error } = signUpBodyRules.validate(req.body);
   if (error) {
     throw new ValidationError(error.message);
   }
-  const newUser = createNewUser(req.body);
-  res.status(201).send(newUser);
+  const newUser = await createNewUser(req.body);
+  res.status(201).json(newUser);
+};
+
+const logInUser = async (req, res) => {
+  const token = await findUserByData(req.body);
+  if (!token) {
+    throw new Error('No token provided');
+  }
+
+  res.cookie('token', token, {
+    httpOnly: true,
+  });
+
+  res.status(201).send(token);
 };
 
 module.exports = {
   addNewUser,
+  logInUser,
 };

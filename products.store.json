@@ -22,5 +22,43 @@
     "name": "Makeup",
     "description": "full face makeup any type",
     "price": 55
+  },
+  {
+    "id": "a6840fdc-9cc5-41a3-bfc9-549adbe18996",
+    "name": "Session",
+    "description": "1 hour lesson",
+    "price": 60
+  },
+  {
+    "id": "51d44fa0-2790-45f9-9f3a-1ee4e9d29912",
+    "name": "Cinema",
+    "description": "1 ticket any movie",
+    "price": 55
+  },
+  {
+    "id": "0080669d-0b85-4e03-a3be-e83b0c53d94b",
+    "name": "Cinema",
+    "description": "1 ticket any movie",
+    "price": 55
+  },
+  {
+    "id": "082b4dff-fd0c-4648-8b4b-eeaaf201367e",
+    "name": "Cinema",
+    "description": "1 tickets any movie + 2 half price",
+    "price": 30
+  },
+  {
+    "id": "68b28a6f-844c-4065-9daf-5ea357107ed2"
+  },
+  {
+    "id": "fc0085e6-c93d-4e3d-9535-d5a3822df5e1",
+    "name": "Cinema",
+    "description": "1 tickets any movie + 2 half price",
+    "price": 30
+  },
+  {
+    "id": "2004d460-ffc3-4816-8355-5b66b8be9aab",
+    "name": "Cinema",
+    "description": "1 tickets any movie + 2 half price"
   }
 ]
